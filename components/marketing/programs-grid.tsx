@@ -56,11 +56,11 @@ export function ProgramsGrid() {
             </Card>
           ))}
         </div>
-        <div className="mt-12 text-center">
-          {/* <Button asChild variant="outline" size="lg">
+        {/* <div className="mt-12 text-center">
+          <Button asChild variant="outline" size="lg">
             <Link href="/#programs">View All Programs</Link>
-          </Button> */}
-        </div>
+          </Button>
+        </div> */}
       </div>
     </section>
   )
