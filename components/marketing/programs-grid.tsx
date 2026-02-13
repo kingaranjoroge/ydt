@@ -57,9 +57,9 @@ export function ProgramsGrid() {
           ))}
         </div>
         <div className="mt-12 text-center">
-          <Button asChild variant="outline" size="lg">
+          {/* <Button asChild variant="outline" size="lg">
             <Link href="/#programs">View All Programs</Link>
-          </Button>
+          </Button> */}
         </div>
       </div>
     </section>
