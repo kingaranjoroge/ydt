@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -39,9 +40,15 @@ export function Navbar() {
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 md:px-6">
         <Link href="/" className="flex items-center gap-2" aria-label="YDT Home">
-          <span className="text-2xl font-bold tracking-tight text-primary">
-            YDT
-          </span>
+          <div className="relative h-12 w-[160px]">
+            <Image
+              src="/images/ydt-logo.png"
+              alt="YDT logo"
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
         </Link>
 
         <div className="hidden items-center gap-6 md:flex">
