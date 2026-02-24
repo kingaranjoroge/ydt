@@ -19,8 +19,8 @@ const programLinks = [
 ]
 
 const socialLinks = [
-  { icon: Twitter, href: "#", label: "Twitter" },
-  { icon: Linkedin, href: "#", label: "LinkedIn" },
+  { icon: Twitter, href: "https://x.com/ydtcommunity", label: "Twitter" },
+  { icon: Linkedin, href: "https://www.linkedin.com/company/ydtcommunity/", label: "LinkedIn" },
   { icon: Instagram, href: "#", label: "Instagram" },
   { icon: Youtube, href: "#", label: "YouTube" },
 ]
