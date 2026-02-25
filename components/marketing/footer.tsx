@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { Twitter, Linkedin, Instagram, Youtube } from "lucide-react"
 import { FaWhatsapp } from "react-icons/fa"
 import { Input } from "@/components/ui/input"
@@ -33,7 +34,17 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
-            <span className="text-2xl font-bold tracking-tight">YDT</span>
+            <Link href="/" className="flex items-center gap-2 justify-center lg:justify-start" aria-label="YDT Home">
+              <div className="relative h-12 w-[160px]">
+                <Image
+                  src="/images/ydt-logo.png"
+                  alt="YDT logo"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            </Link>
             <p className="mt-4 text-sm leading-relaxed text-background/70">
               Empowering African youth with digital skills, mentorship, and
               opportunities to thrive in the digital economy.
@@ -116,11 +127,27 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 border-t border-background/10 pt-8 text-center">
-          <p className="text-sm text-background/50">
-            &copy; {new Date().getFullYear()} Young Digital Talents Community.
-            All rights reserved.
-          </p>
+        <div className="mt-16 border-t border-background/10 pt-8">
+          <div className="flex flex-col items-center justify-center gap-3">
+            <div className="text-sm text-background/60 flex items-center gap-2">
+              <span>Powered by</span>
+              <Link href="/" className="flex items-center gap-2" aria-label="Ondis Hub Logo">
+                <div className="relative h-8 w-36 md:h-12 md:w-[160px]">
+                  <Image
+                    src="/images/ondishub-logo.png"
+                    alt="Ondis Hub logo"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                </div>
+              </Link>
+            </div>
+
+            <p className="text-sm text-background/50">
+              &copy; {new Date().getFullYear()} Young Digital Talents Community. All rights reserved.
+            </p>
+          </div>
         </div>
       </div>
     </footer>
