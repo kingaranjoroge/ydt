@@ -131,7 +131,7 @@ export function Footer() {
           <div className="flex flex-col items-center justify-center gap-3">
             <div className="text-sm text-background/60 flex items-center gap-2">
               <span>Powered by</span>
-              <Link href="/" className="flex items-center gap-2" aria-label="Ondis Hub Logo">
+              <Link href="https://ondishub.co.ke/" className="flex items-center gap-2" aria-label="Ondis Hub Logo">
                 <div className="relative h-8 w-36 md:h-12 md:w-[160px]">
                   <Image
                     src="/images/ondishub-logo.png"
