@@ -24,7 +24,7 @@ export function Hero() {
         </p>
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Button asChild size="lg" className="text-base">
-            <Link href="/#contact">Join the Community</Link>
+            <Link href="https://chat.whatsapp.com/JhEttil8lRU5axFacAnBaF">Join the Community</Link>
           </Button>
           <Button
             asChild
@@ -32,7 +32,7 @@ export function Hero() {
             variant="secondary"
             className="text-base"
           >
-            <Link href="/#contact">Partner With Us</Link>
+            <Link href="https://docs.google.com/forms/d/e/1FAIpQLSd-nNZv5iGt0hcn7hWjAmiA4QHaoIB0BGb238NjeYxp9qL-Bw/viewform">Partner With Us</Link>
           </Button>
         </div>
       </div>

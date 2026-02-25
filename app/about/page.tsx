@@ -158,7 +158,7 @@ export default function AboutPage() {
                 variant="secondary"
                 className="text-base"
               >
-                <Link href="/#contact">Join the Community</Link>
+                <Link href="https://chat.whatsapp.com/JhEttil8lRU5axFacAnBaF">Join the Community</Link>
               </Button>
               <Button
                 asChild
@@ -166,7 +166,7 @@ export default function AboutPage() {
                 variant="outline"
                 className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground bg-transparent"
               >
-                <Link href="/#contact">Partner With Us</Link>
+                <Link href="https://docs.google.com/forms/d/e/1FAIpQLSd-nNZv5iGt0hcn7hWjAmiA4QHaoIB0BGb238NjeYxp9qL-Bw/viewform">Partner With Us</Link>
               </Button>
             </div>
           </div>

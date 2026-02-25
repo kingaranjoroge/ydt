@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { Twitter, Linkedin, Instagram, Youtube } from "lucide-react"
+import { FaWhatsapp } from "react-icons/fa"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
@@ -21,8 +22,9 @@ const programLinks = [
 const socialLinks = [
   { icon: Twitter, href: "https://x.com/ydtcommunity", label: "Twitter" },
   { icon: Linkedin, href: "https://www.linkedin.com/company/ydtcommunity/", label: "LinkedIn" },
-  { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: Youtube, href: "#", label: "YouTube" },
+  { icon: FaWhatsapp, href: "https://www.whatsapp.com/channel/0029Val1bGK2Jl89H5VF782n", label: "WhatsApp" },
+  // { icon: Instagram, href: "#", label: "Instagram" },
+  // { icon: Youtube, href: "#", label: "YouTube" },
 ]
 
 export function Footer() {
