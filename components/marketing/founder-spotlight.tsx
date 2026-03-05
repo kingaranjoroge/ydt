@@ -29,7 +29,7 @@ export function FounderSpotlight() {
               href="/about"
               className="mt-6 inline-block text-sm font-semibold text-primary underline-offset-4 hover:underline"
             >
-              Read the Founder&apos;s Story
+              Read Our Story
             </Link>
           </div>
         </div>
