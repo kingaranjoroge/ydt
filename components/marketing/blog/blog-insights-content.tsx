@@ -15,7 +15,8 @@ export function BlogInsightsContent() {
   const [activeCategory, setActiveCategory] = useState<BlogCategory>("All")
   const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE)
 
-  const featuredPost = useMemo(() => posts.find((post) => post.featured) ?? posts[0], [])
+  // const featuredPost = useMemo(() => posts.find((post) => post.featured) ?? posts[0], [])
+  const featuredPost = posts.find((post) => post.featured) ?? posts[0]
 
   const filteredPosts = useMemo(() => {
     const nonFeaturedPosts = posts.filter((post) => post.id !== featuredPost.id)
@@ -25,7 +26,7 @@ export function BlogInsightsContent() {
     }
 
     return nonFeaturedPosts.filter((post) => post.category === activeCategory)
-  }, [activeCategory, featuredPost.id])
+  }, [posts, activeCategory, featuredPost.id])
 
   const visiblePosts = filteredPosts.slice(0, visibleCount)
   const hasMore = visibleCount < filteredPosts.length
