@@ -1,24 +1,42 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { BlogCard } from "@/components/marketing/blog/blog-card"
 import { CategoryFilter } from "@/components/marketing/blog/category-filter"
 import { FeaturedPost } from "@/components/marketing/blog/featured-post"
 import { NewsletterSection } from "@/components/marketing/blog/newsletter-section"
-import { categories, posts } from "@/components/marketing/blog/posts"
-import type { BlogCategory } from "@/components/marketing/blog/types"
+import type { BlogCategory, BlogPost } from "@/components/marketing/blog/types"
 
 const POSTS_PER_PAGE = 6
 
-export function BlogInsightsContent() {
+type BlogInsightsContentProps = {
+  posts: BlogPost[]
+}
+
+export function BlogInsightsContent({ posts }: BlogInsightsContentProps) {
   const [activeCategory, setActiveCategory] = useState<BlogCategory>("All")
   const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE)
 
-  // const featuredPost = useMemo(() => posts.find((post) => post.featured) ?? posts[0], [])
-  const featuredPost = posts.find((post) => post.featured) ?? posts[0]
+  const categories = useMemo<BlogCategory[]>(() => {
+    const dynamicCategories = [...new Set(posts.map((post) => post.category).filter(Boolean))]
+    return ["All", ...dynamicCategories]
+  }, [posts])
+
+  const featuredPost = useMemo(() => posts.find((post) => post.featured) ?? posts[0], [posts])
+
+  useEffect(() => {
+    if (!categories.includes(activeCategory)) {
+      setActiveCategory("All")
+      setVisibleCount(POSTS_PER_PAGE)
+    }
+  }, [activeCategory, categories])
 
   const filteredPosts = useMemo(() => {
+    if (!featuredPost) {
+      return []
+    }
+
     const nonFeaturedPosts = posts.filter((post) => post.id !== featuredPost.id)
 
     if (activeCategory === "All") {
@@ -26,7 +44,7 @@ export function BlogInsightsContent() {
     }
 
     return nonFeaturedPosts.filter((post) => post.category === activeCategory)
-  }, [posts, activeCategory, featuredPost.id])
+  }, [posts, activeCategory, featuredPost])
 
   const visiblePosts = filteredPosts.slice(0, visibleCount)
   const hasMore = visibleCount < filteredPosts.length
@@ -63,7 +81,13 @@ export function BlogInsightsContent() {
         <h2 id="featured-post-heading" className="mb-5 text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground">
           Featured Story
         </h2>
-        <FeaturedPost post={featuredPost} />
+        {featuredPost ? (
+          <FeaturedPost post={featuredPost} />
+        ) : (
+          <div className="rounded-2xl border border-dashed border-border bg-muted/30 p-10 text-center text-muted-foreground">
+            No featured story is available yet.
+          </div>
+        )}
       </section>
 
       <section className="mx-auto mt-12 max-w-6xl px-4 md:px-6" aria-labelledby="category-filter-heading">
