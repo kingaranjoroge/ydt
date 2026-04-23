@@ -26,11 +26,11 @@ export function BlogInsightsContent({ posts }: BlogInsightsContentProps) {
   const featuredPost = useMemo(() => posts.find((post) => post.featured) ?? posts[0], [posts])
 
   useEffect(() => {
-    if (!categories.includes(activeCategory)) {
-      setActiveCategory("All")
-      setVisibleCount(POSTS_PER_PAGE)
-    }
-  }, [activeCategory, categories])
+  if (activeCategory !== "All" && !categories.includes(activeCategory)) {
+    setActiveCategory("All")
+    setVisibleCount(POSTS_PER_PAGE)
+  }
+}, [activeCategory, categories])
 
   const filteredPosts = useMemo(() => {
     if (!featuredPost) {
