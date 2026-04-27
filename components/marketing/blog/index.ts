@@ -1,0 +1,6 @@
+export { BlogInsightsContent } from "@/components/marketing/blog/blog-insights-content"
+export { BlogCard } from "@/components/marketing/blog/blog-card"
+export { CategoryFilter } from "@/components/marketing/blog/category-filter"
+export { FeaturedPost } from "@/components/marketing/blog/featured-post"
+export { NewsletterSection } from "@/components/marketing/blog/newsletter-section"
+export type { BlogCategory, BlogPost } from "@/components/marketing/blog/types"

@@ -15,6 +15,7 @@ import {
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
+  { label: "Blog", href: "/blog" },
   { label: "Programs", href: "/#programs" },
   { label: "Impact", href: "/#impact" },
   { label: "Contact", href: "/#contact" },
