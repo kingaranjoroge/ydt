@@ -11,7 +11,7 @@ import { Footer } from "@/components/marketing/footer"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { postBySlugQuery, postSlugsQuery } from "@/lib/queries"
-import { sanityFetch, urlFor } from "@/lib/sanity"
+import { urlFor, sanityFetch } from "@/lib/sanity"
 
 type BlogPostPageProps = {
   params: Promise<{ slug: string }>
@@ -84,7 +84,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params
-  const post = await getPost(slug)
+  const post = await sanityFetch<SanityBlogPost>({ query: postBySlugQuery, params: { slug } })
 
   if (!post) {
     return {
