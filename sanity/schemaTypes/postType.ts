@@ -47,6 +47,7 @@ export const postType = defineType({
           { title: 'Tech Trends', value: 'Tech Trends' },
           { title: 'Member Spotlight', value: 'Member Spotlight' },
           { title: 'Event Recaps', value: 'Event Recaps' },
+          { title: 'Community', value: 'Community' },
         ],
       },
       validation: (Rule) => Rule.required(),
