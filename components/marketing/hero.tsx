@@ -32,7 +32,7 @@ export function Hero() {
             variant="secondary"
             className="text-base"
           >
-            <Link href="https://docs.google.com/forms/d/e/1FAIpQLSd-nNZv5iGt0hcn7hWjAmiA4QHaoIB0BGb238NjeYxp9qL-Bw/viewform">Partner With Us</Link>
+            <Link href="https://docs.google.com/forms/d/18kX8ySwJqZwvBSjMbl5QELHr4tzxS0e2ulZBTQdFwtY/viewform?edit_requested=true">Partner With Us</Link>
           </Button>
         </div>
       </div>
