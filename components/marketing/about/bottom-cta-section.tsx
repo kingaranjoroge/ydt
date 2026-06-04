@@ -25,7 +25,7 @@ export function BottomCTASection() {
             variant="outline"
             className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground bg-transparent"
           >
-            <Link href="/partner">Partner With Us</Link>
+            <Link href="https://docs.google.com/forms/d/18kX8ySwJqZwvBSjMbl5QELHr4tzxS0e2ulZBTQdFwtY/viewform?edit_requested=true">Partner With Us</Link>
           </Button>
           <Button
             asChild
