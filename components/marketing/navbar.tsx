@@ -64,7 +64,9 @@ export function Navbar() {
             </Link>
           ))}
           <Button asChild size="sm">
-            <Link href="/#contact">Donate</Link>
+            <Link href="https://docs.google.com/forms/d/e/1FAIpQLSeA7Rgl9ZOWbrOsbOyttIoL0Rlfqeof3yWxYqLnT_rUq7dfBw/viewform" target="_blank" rel="noopener noreferrer">
+              Donate
+            </Link>
           </Button>
         </div>
 
@@ -88,7 +90,7 @@ export function Navbar() {
                 </Link>
               ))}
               <Button asChild className="mt-2">
-                <Link href="/#contact" onClick={() => setOpen(false)}>
+                <Link href="https://docs.google.com/forms/d/e/1FAIpQLSeA7Rgl9ZOWbrOsbOyttIoL0Rlfqeof3yWxYqLnT_rUq7dfBw/viewform" onClick={() => setOpen(false)}>
                   Donate
                 </Link>
               </Button>
