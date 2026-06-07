@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, type FormEvent } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Twitter, Linkedin, Instagram, Youtube } from "lucide-react"
@@ -31,6 +32,50 @@ const socialLinks = [
 ]
 
 export function Footer() {
+  const [email, setEmail] = useState("")
+  const [statusMessage, setStatusMessage] = useState("")
+  const [statusState, setStatusState] = useState<"idle" | "loading" | "success" | "error">("idle")
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    const normalizedEmail = email.trim()
+
+    if (!normalizedEmail) {
+      setStatusState("error")
+      setStatusMessage("Enter a valid email address to subscribe.")
+      return
+    }
+
+    setStatusState("loading")
+    setStatusMessage("")
+
+    try {
+      const response = await fetch("/api/newsletter/subscribe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: normalizedEmail }),
+      })
+
+      const payload = (await response.json().catch(() => null)) as
+        | { message?: string }
+        | null
+
+      if (!response.ok) {
+        throw new Error(payload?.message ?? "Subscription failed. Please try again.")
+      }
+
+      setStatusState("success")
+      setStatusMessage(payload?.message ?? "Thanks for subscribing. Check your inbox for our welcome email.")
+      setEmail("")
+    } catch (error) {
+      setStatusState("error")
+      setStatusMessage(error instanceof Error ? error.message : "Subscription failed. Please try again.")
+    }
+  }
+
   return (
     <footer id="contact" className="bg-foreground text-background">
       <div className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
@@ -109,22 +154,40 @@ export function Footer() {
               Get the latest news and opportunities from YDT Community.
             </p>
             <form
-              onSubmit={(e) => e.preventDefault()}
-              className="mt-4 flex gap-2"
+              onSubmit={handleSubmit}
+              className="mt-4 space-y-3"
+              aria-label="Newsletter subscription form"
             >
-              <Input
-                type="email"
-                placeholder="Your email"
-                className="border-background/20 bg-background/10 text-background placeholder:text-background/40 focus-visible:ring-background/30"
-                aria-label="Email for newsletter"
-              />
-              <Button
-                type="submit"
-                variant="secondary"
-                className="shrink-0"
-              >
-                Subscribe
-              </Button>
+              <div className="flex gap-2">
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder="Your email"
+                  required
+                  autoComplete="email"
+                  className="border-background/20 bg-background/10 text-background placeholder:text-background/40 focus-visible:ring-background/30"
+                  aria-label="Email for newsletter"
+                  disabled={statusState === "loading"}
+                />
+                <Button
+                  type="submit"
+                  variant="secondary"
+                  className="shrink-0"
+                  disabled={statusState === "loading"}
+                >
+                  {statusState === "loading" ? "Subscribing..." : "Subscribe"}
+                </Button>
+              </div>
+              {statusMessage ? (
+                <p
+                  className={`text-xs leading-relaxed ${statusState === "error" ? "text-red-200" : "text-background/60"}`}
+                  role="status"
+                  aria-live="polite"
+                >
+                  {statusMessage}
+                </p>
+              ) : null}
             </form>
           </div>
         </div>
