@@ -15,6 +15,7 @@ import {
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
+  { label: "Support", href: "/support" },
   { label: "Blog", href: "/blog" },
   { label: "Volunteer", href: "/volunteer" },
   { label: "Programs", href: "/#programs" },
@@ -64,8 +65,8 @@ export function Navbar() {
             </Link>
           ))}
           <Button asChild size="sm">
-            <Link href="https://docs.google.com/forms/d/e/1FAIpQLSeA7Rgl9ZOWbrOsbOyttIoL0Rlfqeof3yWxYqLnT_rUq7dfBw/viewform" target="_blank" rel="noopener noreferrer">
-              Donate
+            <Link href="/support">
+              Support Us
             </Link>
           </Button>
         </div>
@@ -90,8 +91,8 @@ export function Navbar() {
                 </Link>
               ))}
               <Button asChild className="mt-2">
-                <Link href="https://docs.google.com/forms/d/e/1FAIpQLSeA7Rgl9ZOWbrOsbOyttIoL0Rlfqeof3yWxYqLnT_rUq7dfBw/viewform" onClick={() => setOpen(false)}>
-                  Donate
+                <Link href="/support" onClick={() => setOpen(false)}>
+                  Support Us
                 </Link>
               </Button>
             </div>

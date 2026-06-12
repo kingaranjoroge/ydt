@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 const quickLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
+  { label: "Support", href: "/support" },
   { label: "Blog", href: "/blog" },
   { label: "Volunteer", href: "/volunteer" },
   { label: "Programs", href: "/#programs" },
