@@ -15,12 +15,12 @@ import {
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  { label: "Support", href: "/support" },
-  { label: "Blog", href: "/blog" },
   { label: "Volunteer", href: "/volunteer" },
-  { label: "Programs", href: "/#programs" },
-  { label: "Impact", href: "/#impact" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Support", href: "/support" },
+  { label: "Blog", href: "/blog" },  
+  // { label: "Programs", href: "/#programs" },
+  // { label: "Impact", href: "/#impact" },
+  // { label: "Contact", href: "/#contact" },
 ]
 
 export function Navbar() {
@@ -64,11 +64,11 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Button asChild size="sm">
+          {/* <Button asChild size="sm">
             <Link href="/support">
               Support Us
             </Link>
-          </Button>
+          </Button> */}
         </div>
 
         <Sheet open={open} onOpenChange={setOpen}>
@@ -90,11 +90,11 @@ export function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              <Button asChild className="mt-2">
+              {/* <Button asChild className="mt-2">
                 <Link href="/support" onClick={() => setOpen(false)}>
                   Support Us
                 </Link>
-              </Button>
+              </Button> */}
             </div>
           </SheetContent>
         </Sheet>

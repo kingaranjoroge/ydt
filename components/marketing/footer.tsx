@@ -11,11 +11,11 @@ import { Button } from "@/components/ui/button"
 const quickLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
+  { label: "Volunteer", href: "/volunteer" },
   { label: "Support", href: "/support" },
   { label: "Blog", href: "/blog" },
-  { label: "Volunteer", href: "/volunteer" },
-  { label: "Programs", href: "/#programs" },
-  { label: "Impact", href: "/#impact" },
+  // { label: "Programs", href: "/#programs" },
+  // { label: "Impact", href: "/#impact" },
 ]
 
 const programLinks = [
