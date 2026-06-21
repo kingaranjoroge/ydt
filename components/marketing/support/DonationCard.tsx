@@ -46,7 +46,7 @@ export function DonationCard() {
             <SectionLabel>Individual Donations</SectionLabel>
             <CardTitle className="text-3xl">Make a direct contribution</CardTitle>
             <CardDescription className="max-w-2xl text-base leading-relaxed">
-              Select a preset tier or enter a custom amount. This build stays fully static, so the button only demonstrates the future flow.
+              Select a preset tier or enter a custom amount.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-8">
