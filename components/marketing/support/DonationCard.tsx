@@ -34,7 +34,7 @@ export function DonationCard() {
 
     setStatus({
       kind: "success",
-      message: `Demo only: donation flow prepared for KES ${normalizedAmount.toLocaleString("en-KE")} from +254${normalizedPhone.replace(/^\+?254/, "")}.`,
+      message: `Donation flow prepared for KES ${normalizedAmount.toLocaleString("en-KE")} from +254${normalizedPhone.replace(/^\+?254/, "")}.`,
     })
   }
 
@@ -121,13 +121,13 @@ export function DonationCard() {
                 </div>
               </div>
 
-              <p className="text-sm leading-relaxed text-muted-foreground">
+              {/* <p className="text-sm leading-relaxed text-muted-foreground">
                 Demo state only. Payment integration, STK Push, and backend processing can be added later.
-              </p>
+              </p> */}
 
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Button type="submit" size="lg" className="text-base">Donate Now</Button>
-                <p className="text-sm text-muted-foreground">Your selection will be previewed before any future payment flow.</p>
+                {/* <p className="text-sm text-muted-foreground">Your selection will be previewed before any future payment flow.</p> */}
               </div>
 
               {status.message ? (
