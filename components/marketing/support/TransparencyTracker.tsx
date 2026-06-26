@@ -22,7 +22,7 @@ function TransparencyResourceCard({ title, description }: { title: string; descr
 export function TransparencyTracker() {
   return (
     <section className="bg-muted/20 py-16 md:py-24">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 md:grid-cols-[0.95fr_1.05fr] md:px-6">
+      <div className="mx-auto grid max-w-6xl gap-8 px-4 md:grid-cols-[0.70fr_1.30fr] md:px-6">
         <Card className="border-border/70">
           <CardHeader>
             <SectionLabel>Transparency & Trust</SectionLabel>
@@ -63,7 +63,7 @@ export function TransparencyTracker() {
             ))}
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="grid gap-5 lg:grid-cols-[1.3fr_0.7fr]">
             <Card className="border-border/70">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-2xl">
