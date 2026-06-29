@@ -15,11 +15,12 @@ import {
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  { label: "Blog", href: "/blog" },
   { label: "Volunteer", href: "/volunteer" },
-  { label: "Programs", href: "/#programs" },
-  { label: "Impact", href: "/#impact" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Support", href: "/support" },
+  { label: "Blog", href: "/blog" },  
+  // { label: "Programs", href: "/#programs" },
+  // { label: "Impact", href: "/#impact" },
+  // { label: "Contact", href: "/#contact" },
 ]
 
 export function Navbar() {
@@ -63,11 +64,11 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Button asChild size="sm">
-            <Link href="https://docs.google.com/forms/d/e/1FAIpQLSeA7Rgl9ZOWbrOsbOyttIoL0Rlfqeof3yWxYqLnT_rUq7dfBw/viewform" target="_blank" rel="noopener noreferrer">
-              Donate
+          {/* <Button asChild size="sm">
+            <Link href="/support">
+              Support Us
             </Link>
-          </Button>
+          </Button> */}
         </div>
 
         <Sheet open={open} onOpenChange={setOpen}>
@@ -89,11 +90,11 @@ export function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              <Button asChild className="mt-2">
-                <Link href="https://docs.google.com/forms/d/e/1FAIpQLSeA7Rgl9ZOWbrOsbOyttIoL0Rlfqeof3yWxYqLnT_rUq7dfBw/viewform" onClick={() => setOpen(false)}>
-                  Donate
+              {/* <Button asChild className="mt-2">
+                <Link href="/support" onClick={() => setOpen(false)}>
+                  Support Us
                 </Link>
-              </Button>
+              </Button> */}
             </div>
           </SheetContent>
         </Sheet>
