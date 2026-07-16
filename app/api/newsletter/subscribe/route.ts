@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { z } from "zod"
 import { createSupabaseAdminClient } from "@/lib/supabase/server"
+import { Resend } from "resend"
 
 const subscribeSchema = z.object({
   email: z.string().trim().email().max(254),
@@ -8,33 +9,26 @@ const subscribeSchema = z.object({
 
 const resendApiKey = process.env.RESEND_API_KEY
 const newsletterFromEmail = process.env.NEWSLETTER_FROM_EMAIL
+const resend = resendApiKey ? new Resend(resendApiKey) : null
 
 async function sendAcknowledgementEmail(email: string) {
-  if (!resendApiKey || !newsletterFromEmail) {
+  if (!resend || !newsletterFromEmail) {
     throw new Error("Newsletter email delivery is not configured.")
   }
 
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${resendApiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: newsletterFromEmail,
-      to: [email],
-      subject: "Thanks for subscribing to YDT Community",
-      html: `
-        <p>Thanks for subscribing to YDT Community.</p>
-        <p>We will send occasional opportunities, stories, and updates to this inbox.</p>
-      `,
-      text: "Thanks for subscribing to YDT Community. We will send occasional opportunities, stories, and updates to this inbox.",
-    }),
+  const { error } = await resend.emails.send({
+    from: newsletterFromEmail,
+    to: [email],
+    subject: "Thanks for subscribing to YDT Community",
+    html: `
+      <p>Thanks for subscribing to YDT Community.</p>
+      <p>We will send occasional opportunities, stories, and updates to this inbox.</p>
+    `,
+    text: "Thanks for subscribing to YDT Community. We will send occasional opportunities, stories, and updates to this inbox.",
   })
 
-  if (!response.ok) {
-    const errorText = await response.text()
-    throw new Error(errorText || "Failed to send acknowledgement email.")
+  if (error) {
+    throw new Error(error.message || "Failed to send acknowledgement email.")
   }
 }
 
