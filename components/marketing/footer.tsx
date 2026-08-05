@@ -14,6 +14,7 @@ const quickLinks = [
   { label: "Volunteer", href: "/volunteer" },
   { label: "Support", href: "/support" },
   { label: "Blog", href: "/blog" },
+  { label: "Contact", href: "/contact" },
   // { label: "Programs", href: "/#programs" },
   // { label: "Impact", href: "/#impact" },
 ]
