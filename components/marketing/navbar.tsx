@@ -17,10 +17,10 @@ const navLinks = [
   { label: "About", href: "/about" },
   { label: "Volunteer", href: "/volunteer" },
   { label: "Support", href: "/support" },
-  { label: "Blog", href: "/blog" },  
+  { label: "Blog", href: "/blog" },
   // { label: "Programs", href: "/#programs" },
   // { label: "Impact", href: "/#impact" },
-  // { label: "Contact", href: "/#contact" },
+  { label: "Contact", href: "/contact" },
 ]
 
 export function Navbar() {
