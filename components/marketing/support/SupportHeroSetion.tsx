@@ -37,15 +37,15 @@ export function SupportHeroSection() {
           <div className="mt-8 flex flex-wrap gap-3 text-sm text-muted-foreground">
             <span className="inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-3 py-1.5">
               <Sparkles className="h-4 w-4 text-primary" />
-              Static frontend demo
+              Community-powered impact
             </span>
             <span className="inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-3 py-1.5">
               <ShieldCheck className="h-4 w-4 text-primary" />
-              Trust-first design
+              Secure M-Pesa giving
             </span>
             <span className="inline-flex items-center gap-2 rounded-full border border-border bg-background/80 px-3 py-1.5">
               <HeartHandshake className="h-4 w-4 text-primary" />
-              Future-ready for integrations
+              Transparent fund allocation
             </span>
           </div>
         </div>
