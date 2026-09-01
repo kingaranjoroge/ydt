@@ -6,6 +6,14 @@ import { ShieldCheck, Target } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Progress } from "@/components/ui/progress"
 import { cn } from "@/lib/utils"
@@ -13,11 +21,17 @@ import { cn } from "@/lib/utils"
 import { SectionLabel } from "./SectionLabel"
 import { donationTiers } from "./data"
 
+const MPESA_PAYBILL_NUMBER = "880100"
+const MPESA_ACCOUNT_NAME = "NCBA Bank Kenya Plc"
+const MPESA_ACCOUNT_NUMBER = "4412750019"
+
 export function DonationCard() {
   const [selectedAmount, setSelectedAmount] = useState(500)
   const [customAmount, setCustomAmount] = useState("")
   const [phoneNumber, setPhoneNumber] = useState("")
-  const [status, setStatus] = useState<{ kind: "idle" | "success" | "error"; message: string }>({ kind: "idle", message: "" })
+  const [status, setStatus] = useState<{ kind: "idle" | "error"; message: string }>({ kind: "idle", message: "" })
+  const [isMpesaModalOpen, setIsMpesaModalOpen] = useState(false)
+  const [confirmedAmount, setConfirmedAmount] = useState(0)
 
   const activeAmount = customAmount.trim() || String(selectedAmount)
 
@@ -28,14 +42,13 @@ export function DonationCard() {
     const normalizedPhone = phoneNumber.replace(/\s+/g, "").trim()
 
     if (!Number.isFinite(normalizedAmount) || normalizedAmount <= 0 || !normalizedPhone) {
-      setStatus({ kind: "error", message: "Enter a valid donation amount and phone number to show the demo flow." })
+      setStatus({ kind: "error", message: "Enter a valid donation amount and phone number to continue." })
       return
     }
 
-    setStatus({
-      kind: "success",
-      message: `Donation flow prepared for KES ${normalizedAmount.toLocaleString("en-KE")} from +254${normalizedPhone.replace(/^\+?254/, "")}.`,
-    })
+    setStatus({ kind: "idle", message: "" })
+    setConfirmedAmount(normalizedAmount)
+    setIsMpesaModalOpen(true)
   }
 
   return (
@@ -121,21 +134,13 @@ export function DonationCard() {
                 </div>
               </div>
 
-              {/* <p className="text-sm leading-relaxed text-muted-foreground">
-                Demo state only. Payment integration, STK Push, and backend processing can be added later.
-              </p> */}
-
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Button type="submit" size="lg" className="text-base">Donate Now</Button>
-                {/* <p className="text-sm text-muted-foreground">Your selection will be previewed before any future payment flow.</p> */}
               </div>
 
               {status.message ? (
                 <div
-                  className={cn(
-                    "rounded-2xl border p-4 text-sm leading-relaxed",
-                    status.kind === "error" ? "border-red-200 bg-red-50 text-red-700" : "border-emerald-200 bg-emerald-50 text-emerald-800",
-                  )}
+                  className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm leading-relaxed text-red-700"
                   role="status"
                   aria-live="polite"
                 >
@@ -193,6 +198,61 @@ export function DonationCard() {
           </Card>
         </div>
       </div>
+
+      <Dialog open={isMpesaModalOpen} onOpenChange={setIsMpesaModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Complete your donation via M-Pesa</DialogTitle>
+            <DialogDescription>
+              Follow these steps on your phone to send KES {confirmedAmount.toLocaleString("en-KE")} using Lipa na M-Pesa.
+            </DialogDescription>
+          </DialogHeader>
+
+          <ol className="space-y-3 text-sm leading-relaxed text-muted-foreground">
+            <li className="flex gap-3">
+              <span className="font-semibold text-foreground">1.</span>
+              <span>Go to M-Pesa on your phone and select <span className="font-medium text-foreground">Lipa na M-Pesa</span>, then <span className="font-medium text-foreground">Pay Bill</span>.</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="font-semibold text-foreground">2.</span>
+              <span>Enter Business Number <span className="font-medium text-foreground">{MPESA_PAYBILL_NUMBER}</span>.</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="font-semibold text-foreground">3.</span>
+              <span>Enter Account Number <span className="font-medium text-foreground">{MPESA_ACCOUNT_NUMBER}</span>.</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="font-semibold text-foreground">4.</span>
+              <span>Enter Amount <span className="font-medium text-foreground">KES {confirmedAmount.toLocaleString("en-KE")}</span>.</span>
+            </li>
+            <li className="flex gap-3">
+              <span className="font-semibold text-foreground">5.</span>
+              <span>Enter your M-Pesa PIN and confirm. You&apos;ll receive an SMS once the payment goes through.</span>
+            </li>
+          </ol>
+
+          <div className="rounded-2xl border border-border bg-muted/30 p-4 text-sm">
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground">Paybill / Business No.</span>
+              <span className="font-semibold text-foreground">{MPESA_PAYBILL_NUMBER}</span>
+            </div>
+            <div className="mt-2 flex items-center justify-between">
+              <span className="text-muted-foreground">Bank</span>
+              <span className="font-semibold text-foreground">{MPESA_ACCOUNT_NAME}</span>
+            </div>
+            <div className="mt-2 flex items-center justify-between">
+              <span className="text-muted-foreground">Account Number</span>
+              <span className="font-semibold text-foreground">{MPESA_ACCOUNT_NUMBER}</span>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button onClick={() => setIsMpesaModalOpen(false)} className="w-full sm:w-auto">
+              Done
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </section>
   )
 }
