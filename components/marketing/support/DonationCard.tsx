@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, type FormEvent } from "react"
-import { ShieldCheck, Target } from "lucide-react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
+import { CheckCircle2, Loader2, ShieldCheck, Target, XCircle } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Progress } from "@/components/ui/progress"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
 
 import { SectionLabel } from "./SectionLabel"
@@ -25,6 +26,11 @@ const MPESA_PAYBILL_NUMBER = "880100"
 const MPESA_ACCOUNT_NAME = "NCBA Bank Kenya Plc"
 const MPESA_ACCOUNT_NUMBER = "4412750019"
 
+const POLL_INTERVAL_SECONDS = 3
+const POLL_TIMEOUT_SECONDS = 60
+
+type MpesaState = "idle" | "requesting" | "polling" | "success" | "failed" | "timeout"
+
 export function DonationCard() {
   const [selectedAmount, setSelectedAmount] = useState(500)
   const [customAmount, setCustomAmount] = useState("")
@@ -33,9 +39,92 @@ export function DonationCard() {
   const [isMpesaModalOpen, setIsMpesaModalOpen] = useState(false)
   const [confirmedAmount, setConfirmedAmount] = useState(0)
 
+  const [paymentMethod, setPaymentMethod] = useState<"stk" | "manual">("stk")
+  const [mpesaState, setMpesaState] = useState<MpesaState>("idle")
+  const [checkoutRequestId, setCheckoutRequestId] = useState<string | null>(null)
+  const [receiptNumber, setReceiptNumber] = useState<string | null>(null)
+  const [stkAmount, setStkAmount] = useState(0)
+  const [mpesaError, setMpesaError] = useState("")
+  const [elapsedSeconds, setElapsedSeconds] = useState(0)
+
+  const pollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
   const activeAmount = customAmount.trim() || String(selectedAmount)
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    return () => {
+      if (pollTimerRef.current) {
+        clearInterval(pollTimerRef.current)
+      }
+    }
+  }, [])
+
+  const stopPolling = () => {
+    if (pollTimerRef.current) {
+      clearInterval(pollTimerRef.current)
+      pollTimerRef.current = null
+    }
+  }
+
+  const checkStatus = async (id: string) => {
+    try {
+      const response = await fetch(`/api/mpesa/status/${id}`)
+      const data = await response.json()
+
+      if (!response.ok) {
+        return
+      }
+
+      if (data.status === "completed") {
+        stopPolling()
+        setReceiptNumber(data.mpesaReceiptNumber ?? null)
+        setMpesaState("success")
+      } else if (data.status === "failed" || data.status === "cancelled") {
+        stopPolling()
+        setMpesaError(data.resultDesc || "The payment was not completed.")
+        setMpesaState("failed")
+      }
+    } catch {
+      // transient network error while polling — keep waiting for the next tick
+    }
+  }
+
+  const beginPolling = (id: string) => {
+    setElapsedSeconds(0)
+    setMpesaState("polling")
+
+    let seconds = 0
+    pollTimerRef.current = setInterval(() => {
+      seconds += 1
+      setElapsedSeconds(seconds)
+
+      if (seconds >= POLL_TIMEOUT_SECONDS) {
+        stopPolling()
+        setMpesaState("timeout")
+        return
+      }
+
+      if (seconds % POLL_INTERVAL_SECONDS === 0) {
+        void checkStatus(id)
+      }
+    }, 1000)
+  }
+
+  const resetMpesaFlow = () => {
+    stopPolling()
+    setMpesaState("idle")
+    setCheckoutRequestId(null)
+    setReceiptNumber(null)
+    setMpesaError("")
+    setElapsedSeconds(0)
+  }
+
+  const switchToManual = () => {
+    resetMpesaFlow()
+    setPaymentMethod("manual")
+  }
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     const normalizedAmount = Number(activeAmount.replace(/,/g, "").trim())
@@ -47,8 +136,38 @@ export function DonationCard() {
     }
 
     setStatus({ kind: "idle", message: "" })
-    setConfirmedAmount(normalizedAmount)
-    setIsMpesaModalOpen(true)
+
+    if (paymentMethod === "manual") {
+      setConfirmedAmount(normalizedAmount)
+      setIsMpesaModalOpen(true)
+      return
+    }
+
+    setStkAmount(normalizedAmount)
+    setMpesaError("")
+    setMpesaState("requesting")
+
+    try {
+      const response = await fetch("/api/mpesa/stk-push", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: normalizedAmount, phone: normalizedPhone }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        setMpesaError(data.message || "We couldn't reach M-Pesa right now.")
+        setMpesaState("failed")
+        return
+      }
+
+      setCheckoutRequestId(data.checkoutRequestId)
+      beginPolling(data.checkoutRequestId)
+    } catch {
+      setMpesaError("We couldn't reach M-Pesa right now. Check your connection and try again.")
+      setMpesaState("failed")
+    }
   }
 
   return (
@@ -134,9 +253,104 @@ export function DonationCard() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <Button type="submit" size="lg" className="text-base">Donate Now</Button>
-              </div>
+              <Tabs
+                value={paymentMethod}
+                onValueChange={(value) => {
+                  if (value === "manual") {
+                    switchToManual()
+                  } else {
+                    resetMpesaFlow()
+                    setPaymentMethod("stk")
+                  }
+                }}
+              >
+                <TabsList>
+                  <TabsTrigger value="stk">Pay via STK Push</TabsTrigger>
+                  <TabsTrigger value="manual">Pay manually</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="stk" className="space-y-4">
+                  {mpesaState === "idle" ? (
+                    <Button type="submit" size="lg" className="text-base">Send M-Pesa prompt</Button>
+                  ) : null}
+
+                  {mpesaState === "requesting" ? (
+                    <Button type="button" size="lg" className="text-base" disabled>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Sending request…
+                    </Button>
+                  ) : null}
+
+                  {mpesaState === "polling" ? (
+                    <div className="rounded-2xl border border-border bg-muted/30 p-4 text-sm">
+                      <p className="flex items-center gap-2 font-medium text-foreground">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Check your phone and enter your M-Pesa PIN
+                      </p>
+                      <p className="mt-1 text-muted-foreground">Waiting… {elapsedSeconds}s</p>
+                      <button
+                        type="button"
+                        onClick={resetMpesaFlow}
+                        className="mt-3 text-sm font-medium text-primary underline-offset-4 hover:underline"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : null}
+
+                  {mpesaState === "success" ? (
+                    <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4 text-sm">
+                      <p className="flex items-center gap-2 font-medium text-foreground">
+                        <CheckCircle2 className="h-4 w-4 text-primary" />
+                        Thank you! We received KES {stkAmount.toLocaleString("en-KE")}
+                        {receiptNumber ? ` (Receipt ${receiptNumber})` : ""}.
+                      </p>
+                      <Button type="button" variant="outline" className="mt-3" onClick={resetMpesaFlow}>
+                        Donate again
+                      </Button>
+                    </div>
+                  ) : null}
+
+                  {mpesaState === "failed" ? (
+                    <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                      <p className="flex items-center gap-2 font-medium">
+                        <XCircle className="h-4 w-4" />
+                        {mpesaError}
+                      </p>
+                      <div className="mt-3 flex flex-wrap gap-3">
+                        <Button type="button" variant="outline" onClick={resetMpesaFlow}>
+                          Try again
+                        </Button>
+                        <Button type="button" variant="outline" onClick={switchToManual}>
+                          Pay manually instead
+                        </Button>
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {mpesaState === "timeout" ? (
+                    <div className="rounded-2xl border border-border bg-muted/30 p-4 text-sm">
+                      <p className="font-medium text-foreground">We haven&apos;t heard back yet.</p>
+                      <div className="mt-3 flex flex-wrap gap-3">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => checkoutRequestId && void checkStatus(checkoutRequestId)}
+                        >
+                          Check again
+                        </Button>
+                        <Button type="button" variant="outline" onClick={switchToManual}>
+                          Pay manually instead
+                        </Button>
+                      </div>
+                    </div>
+                  ) : null}
+                </TabsContent>
+
+                <TabsContent value="manual">
+                  <Button type="submit" size="lg" className="text-base">Donate Now</Button>
+                </TabsContent>
+              </Tabs>
 
               {status.message ? (
                 <div
